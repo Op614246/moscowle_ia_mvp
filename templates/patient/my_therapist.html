@@ -1,0 +1,117 @@
+{% extends "patient/base.html" %}
+
+{% block title %}Mi Terapeuta - Moscowle{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="mb-8">
+    <h2 class="text-3xl font-bold text-charcoal mb-2">Mi Terapeuta</h2>
+    <p class="text-gray-600">Información de contacto y comunicación</p>
+</div>
+
+<!-- Therapist Profile -->
+<div class="bg-gradient-to-r from-olive to-green-600 rounded-soft shadow-soft p-8 mb-6 text-white">
+    <div class="flex items-center space-x-6">
+        <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center">
+            <i class="fas fa-user-doctor text-olive text-4xl"></i>
+        </div>
+        <div class="flex-1">
+            <h3 class="text-2xl font-bold mb-2">Centro de Terapias Juan Pablo II</h3>
+            <p class="text-green-100 mb-4">Equipo profesional de terapia cognitiva</p>
+            <div class="flex items-center space-x-6 text-sm">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-envelope"></i>
+                    <span>info@centrojuanpabloii.com</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-phone"></i>
+                    <span>+51 921 507 470</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Options -->
+<div class="grid grid-cols-3 gap-6 mb-6">
+    <div class="bg-white rounded-soft shadow-soft p-6 text-center hover:shadow-lg transition-shadow cursor-pointer">
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-envelope text-blue-600 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-charcoal mb-2">Enviar Mensaje</h3>
+        <p class="text-sm text-gray-600">Escribe a tu terapeuta</p>
+    </div>
+
+    <div class="bg-white rounded-soft shadow-soft p-6 text-center hover:shadow-lg transition-shadow cursor-pointer">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-video text-green-600 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-charcoal mb-2">Videollamada</h3>
+        <p class="text-sm text-gray-600">Sesión virtual</p>
+    </div>
+
+    <div class="bg-white rounded-soft shadow-soft p-6 text-center hover:shadow-lg transition-shadow cursor-pointer">
+        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-calendar-plus text-purple-600 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-charcoal mb-2">Agendar Cita</h3>
+        <p class="text-sm text-gray-600">Solicitar sesión</p>
+    </div>
+</div>
+
+<!-- Recent Communications -->
+<div class="bg-white rounded-soft shadow-soft p-6 mb-6">
+    <h3 class="text-xl font-semibold text-charcoal mb-6 flex items-center">
+        <i class="fas fa-comments text-olive mr-3"></i>
+        Mensajes Recientes
+    </h3>
+    
+    <div class="space-y-4">
+        <div class="p-4 bg-gray-50 rounded-xl">
+            <div class="flex items-center justify-between mb-2">
+                <span class="font-semibold text-charcoal">Recordatorio de Sesión</span>
+                <span class="text-xs text-gray-500">Hace 2 días</span>
+            </div>
+            <p class="text-sm text-gray-600">Tienes una sesión programada para el 15 de diciembre a las 10:00 AM.</p>
+        </div>
+
+        <div class="p-4 bg-blue-50 rounded-xl border-l-4 border-blue-500">
+            <div class="flex items-center justify-between mb-2">
+                <span class="font-semibold text-charcoal">Felicitaciones</span>
+                <span class="text-xs text-gray-500">Hace 1 semana</span>
+            </div>
+            <p class="text-sm text-gray-600">¡Excelente progreso esta semana! Sigue así con los ejercicios.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Resources -->
+<div class="bg-white rounded-soft shadow-soft p-6">
+    <h3 class="text-xl font-semibold text-charcoal mb-6 flex items-center">
+        <i class="fas fa-book text-olive mr-3"></i>
+        Recursos Recomendados
+    </h3>
+    
+    <div class="grid grid-cols-2 gap-4">
+        <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer">
+            <div class="w-12 h-12 bg-olive bg-opacity-10 rounded-lg flex items-center justify-center">
+                <i class="fas fa-file-pdf text-olive text-xl"></i>
+            </div>
+            <div>
+                <p class="font-semibold text-charcoal text-sm">Guía de Ejercicios</p>
+                <p class="text-xs text-gray-500">PDF - 2.5 MB</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-video text-blue-600 text-xl"></i>
+            </div>
+            <div>
+                <p class="font-semibold text-charcoal text-sm">Video Tutorial</p>
+                <p class="text-xs text-gray-500">MP4 - 15:30</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

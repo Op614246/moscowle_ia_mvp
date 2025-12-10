@@ -1,0 +1,123 @@
+{% extends "patient/base.html" %}
+
+{% block title %}Mensajes - Moscowle{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-soft shadow-soft overflow-hidden" style="height: calc(100vh - 250px);">
+    
+    <!-- Header -->
+    <div class="border-b border-gray-200 p-6">
+        <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <span class="text-white text-lg font-bold">{{ therapist.username[0].upper() if therapist.username else 'T' }}</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-charcoal">{{ therapist.username or 'Tu Terapeuta' }}</h2>
+                <p class="text-sm text-gray-500">{{ therapist.email }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="messages-container" class="overflow-y-auto p-6 space-y-4" style="height: calc(100% - 280px);">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="flex {% if message.sender_id == current_user.id %}justify-end{% else %}justify-start{% endif %}">
+                <div class="max-w-lg {% if message.sender_id == current_user.id %}bg-olive text-white{% else %}bg-gray-100 text-charcoal{% endif %} rounded-2xl px-5 py-3 shadow-sm">
+                    {% if message.subject %}
+                    <p class="font-semibold text-sm mb-1 {% if message.sender_id == current_user.id %}text-green-100{% else %}text-gray-700{% endif %}">{{ message.subject }}</p>
+                    {% endif %}
+                    <p class="text-sm leading-relaxed">{{ message.body }}</p>
+                    <p class="text-xs {% if message.sender_id == current_user.id %}text-green-100{% else %}text-gray-500{% endif %} mt-2">
+                        {{ message.created_at.strftime('%d %b, %H:%M') }}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="flex items-center justify-center h-full">
+                <div class="text-center text-gray-400">
+                    <i class="fas fa-comments text-6xl mb-4"></i>
+                    <p class="text-lg font-medium">No hay mensajes aún</p>
+                    <p class="text-sm mt-1">Inicia la conversación con tu terapeuta</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Message Input -->
+    <div class="border-t border-gray-200 p-4 bg-gray-50">
+        <form id="messageForm" class="space-y-3">
+            <input type="text" id="messageSubject" placeholder="Asunto (opcional)" 
+                   class="w-full px-4 py-2 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-olive focus:border-transparent">
+            <div class="flex items-end space-x-3">
+                <textarea id="messageBody" rows="2" placeholder="Escribe tu mensaje..." 
+                          class="flex-1 px-4 py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-olive focus:border-transparent resize-none"></textarea>
+                <button type="submit" class="bg-olive text-white px-6 py-3 rounded-xl font-medium hover:bg-green-600 transition-colors shadow-sm">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const messageForm = document.getElementById('messageForm');
+    const messageSubject = document.getElementById('messageSubject');
+    const messageBody = document.getElementById('messageBody');
+    const messagesContainer = document.getElementById('messages-container');
+
+    // Scroll to bottom on load
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    messageForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const body = messageBody.value.trim();
+        if (!body) return;
+
+        fetch('/api/messages/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                receiver_id: {{ therapist.id }},
+                subject: messageSubject.value.trim(),
+                body: body
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Add message to UI
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'flex justify-end';
+                const subjectHtml = messageSubject.value.trim() ? `<p class="font-semibold text-sm mb-1 text-green-100">${messageSubject.value}</p>` : '';
+                messageDiv.innerHTML = `
+                    <div class="max-w-lg bg-olive text-white rounded-2xl px-5 py-3 shadow-sm">
+                        ${subjectHtml}
+                        <p class="text-sm leading-relaxed">${body}</p>
+                        <p class="text-xs text-green-100 mt-2">Ahora</p>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Clear inputs
+                messageSubject.value = '';
+                messageBody.value = '';
+            } else {
+                alert('❌ Error al enviar mensaje');
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            alert('❌ Error al enviar mensaje');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends "therapist/base.html" %}
+
+{% block header_content %}
+<div>
+    <h2 class="text-2xl font-bold text-textDark">Panel de Control</h2>
+    <p class="text-sm text-gray-500">Monitoreo y gestión de pacientes</p>
+</div>
+{% endblock %}
+
+{% block header_action %}
+<button class="px-5 py-2 bg-primary text-white rounded-soft hover:bg-opacity-90 transition-all shadow-soft font-medium">
+    <i class="fas fa-plus mr-2"></i>
+    Nueva Sesión
+</button>
+{% endblock %}
+
+{% block content %}
+    <div id="dashboard-stats" class="px-8 py-6">
+        <div class="grid grid-cols-4 gap-6">
+            <!-- Stats Cards -->
+            <div class="bg-surface rounded-soft shadow-soft p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 rounded-soft bg-lightGreen flex items-center justify-center">
+                        <i class="fa-solid fa-users text-primary text-2xl"></i>
+                    </div>
+                    <span class="text-statusGreen text-sm font-semibold">+12%</span>
+                </div>
+                <h3 class="text-3xl font-bold text-textDark mb-1">{{ stats.active_patients }}</h3>
+                <p class="text-sm text-gray-500 font-medium">Pacientes Activos</p>
+            </div>
+            
+            <div class="bg-surface rounded-soft shadow-soft p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 rounded-soft bg-blue-50 flex items-center justify-center">
+                        <i class="fa-solid fa-calendar-check text-blue-500 text-2xl"></i>
+                    </div>
+                    <span class="text-statusGreen text-sm font-semibold">+8%</span>
+                </div>
+                <h3 class="text-3xl font-bold text-textDark mb-1">{{ stats.total_sessions }}</h3>
+                <p class="text-sm text-gray-500 font-medium">Sesiones Completadas</p>
+            </div>
+
+            <div class="bg-surface rounded-soft shadow-soft p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 rounded-soft bg-purple-50 flex items-center justify-center">
+                        <i class="fa-solid fa-brain text-purple-500 text-2xl"></i>
+                    </div>
+                    <span class="text-primary text-sm font-semibold">IA Activa</span>
+                </div>
+                <h3 class="text-3xl font-bold text-textDark mb-1">{{ stats.ia_precision }}%</h3>
+                <p class="text-sm text-gray-500 font-medium">Precisión de IA</p>
+            </div>
+
+            <div class="bg-surface rounded-soft shadow-soft p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 rounded-soft bg-amber-50 flex items-center justify-center">
+                        <i class="fa-solid fa-chart-line text-amber-500 text-2xl"></i>
+                    </div>
+                    <span class="text-statusGreen text-sm font-semibold">+{{ stats.improvement_rate }}%</span>
+                </div>
+                <h3 class="text-3xl font-bold text-textDark mb-1">{{ stats.improvement_rate }}%</h3>
+                <p class="text-sm text-gray-500 font-medium">Tasa de Mejora</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="patient-performance-section" class="px-8 pb-8">
+        <div class="bg-surface rounded-soft shadow-soft p-8">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-textDark mb-2">Rendimiento de Pacientes</h3>
+                    <p class="text-sm text-gray-500">Análisis en tiempo real con recomendaciones de IA</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="px-5 py-2.5 rounded-full border-2 border-gray-200 text-gray-600 font-medium hover:border-primary hover:text-primary transition-all">
+                        <i class="fa-solid fa-filter mr-2"></i>Filtrar
+                    </button>
+                    <button class="px-5 py-2.5 rounded-full bg-primary text-white font-semibold shadow-soft hover:shadow-soft-lg transition-all">
+                        <i class="fa-solid fa-download mr-2"></i>Exportar
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b-2 border-gray-100">
+                            <th class="text-left py-4 px-4 text-sm font-bold text-gray-600 uppercase tracking-wide">Paciente</th>
+                            <th class="text-left py-4 px-4 text-sm font-bold text-gray-600 uppercase tracking-wide">Ejercicio</th>
+                            <th class="text-center py-4 px-4 text-sm font-bold text-gray-600 uppercase tracking-wide">Nivel Actual</th>
+                            <th class="text-center py-4 px-4 text-sm font-bold text-gray-600 uppercase tracking-wide">Precisión</th>
+                            <th class="text-center py-4 px-4 text-sm font-bold text-gray-600 uppercase tracking-wide">Tiempo Promedio</th>
+                            <th class="text-center py-4 px-4 text-sm font-bold text-gray-600 uppercase tracking-wide">Sesiones</th>
+                            <th class="text-left py-4 px-4 text-sm font-bold text-gray-600 uppercase tracking-wide">Recomendación IA</th>
+                            <th class="text-center py-4 px-4 text-sm font-bold text-gray-600 uppercase tracking-wide">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for p in patients %}
+                        <tr class="hover:bg-lightGreen transition-colors">
+                            <td class="py-5 px-4">
+                                <div class="flex items-center gap-3">
+                                    <img src="{{ p.avatar }}" alt="Patient" class="w-11 h-11 rounded-full object-cover">
+                                    <div>
+                                        <p class="font-semibold text-textDark">{{ p.name }}</p>
+                                        <p class="text-xs text-gray-500">ID: {{ p.ptid }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-5 px-4">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-gamepad text-primary"></i>
+                                    <span class="text-sm font-medium">{{ p.game }}</span>
+                                </div>
+                            </td>
+                            <td class="py-5 px-4 text-center">
+                                <span class="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">Nivel {{ p.level }}</span>
+                            </td>
+                            <td class="py-5 px-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full {% if p.accuracy > 80 %}bg-statusGreen{% elif p.accuracy > 50 %}bg-statusYellow{% else %}bg-statusRed{% endif %} rounded-full" style="width: {{ p.accuracy }}%"></div>
+                                    </div>
+                                    <span class="text-sm font-bold {% if p.accuracy > 80 %}text-statusGreen{% elif p.accuracy > 50 %}text-statusYellow{% else %}text-statusRed{% endif %}">{{ p.accuracy }}%</span>
+                                </div>
+                            </td>
+                            <td class="py-5 px-4 text-center">
+                                <span class="text-sm font-semibold text-textDark">{{ p.avg_time }}s</span>
+                            </td>
+                            <td class="py-5 px-4 text-center">
+                                <span class="text-sm font-semibold text-textDark">{{ p.sessions }}</span>
+                            </td>
+                            <td class="py-5 px-4">
+                                {% if p.prediction_code == 1 %}
+                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-statusGreen bg-opacity-10 text-statusGreen text-sm font-bold">
+                                    <i class="fa-solid fa-arrow-up"></i>Avanzar Nivel
+                                </span>
+                                {% elif p.prediction_code == 2 %}
+                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-statusRed bg-opacity-10 text-statusRed text-sm font-bold">
+                                    <i class="fa-solid fa-heart"></i>Necesita Apoyo
+                                </span>
+                                {% else %}
+                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-statusYellow bg-opacity-10 text-statusYellow text-sm font-bold">
+                                    <i class="fa-solid fa-minus"></i>Mantener Nivel
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-5 px-4 text-center">
+                                <button class="p-2 rounded-soft hover:bg-primary hover:text-white transition-all">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="ai-insights-section" class="px-8 pb-8">
+        <div class="grid grid-cols-3 gap-6">
+            <div class="col-span-2 bg-surface rounded-soft shadow-soft p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-textDark">Progreso Semanal</h3>
+                    <select class="px-4 py-2 rounded-full border-2 border-gray-200 text-sm font-medium focus:outline-none focus:border-primary">
+                        <option>Últimos 7 días</option>
+                        <option>Últimos 30 días</option>
+                        <option>Últimos 90 días</option>
+                    </select>
+                </div>
+                <div class="h-64 flex items-center justify-center bg-lightGreen rounded-soft">
+                    <div class="text-center">
+                        <i class="fa-solid fa-chart-line text-primary text-5xl mb-4"></i>
+                        <p class="text-gray-500 font-medium">Gráfico de progreso</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-surface rounded-soft shadow-soft p-8">
+                <h3 class="text-xl font-bold text-textDark mb-6">Alertas IA</h3>
+                <div class="space-y-4">
+                    {% for alert in alerts %}
+                    <div class="p-4 rounded-soft bg-status{{ alert.type|capitalize }} bg-opacity-5 border-l-4 border-status{{ alert.type|capitalize }}">
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-exclamation-circle text-status{{ alert.type|capitalize }} mt-1"></i>
+                            <div>
+                                <p class="text-sm font-bold text-textDark">{{ alert.patient }}</p>
+                                <p class="text-xs text-gray-600 mt-1">{{ alert.message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-sm">No hay alertas recientes.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer" class="px-8 py-6 bg-surface border-t border-gray-100 mt-8">
+        <div class="flex items-center justify-between">
+            <p class="text-sm text-gray-500">© 2024 Centro de Terapias Juan Pablo II - Moscowle Platform</p>
+            <div class="flex items-center gap-6">
+                <a href="#" class="text-sm text-gray-500 hover:text-primary transition-colors">Soporte</a>
+                <a href="#" class="text-sm text-gray-500 hover:text-primary transition-colors">Documentación</a>
+                <a href="#" class="text-sm text-gray-500 hover:text-primary transition-colors">Privacidad</a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
